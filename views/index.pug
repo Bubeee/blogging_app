@@ -1,5 +1,14 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1(class="page-header")= title
+  h3 Available routes:
+  div(class="table")
+    ul
+      ol
+        a(href="/blogs") GET /blogs
+      ol GET /blogs/{id} 
+      ol POST /blogs     
+      ol PUT /blogs/{id} 
+      ol DELETE /blogs/{id}
+        
