@@ -3,11 +3,27 @@ var router = express.Router();
 
 let blogsController = require('../pages/blogs');
 
-/* GET users listing. */
 router.get('/', function(req, res, next) {
-  console.log(blogsController)
-
   res.json(blogsController.get());
+});
+
+router.get('/:id', function(req, res, next) {
+  const id = req.params.id;
+  res.json(blogsController.getById(id));
+});
+
+router.post('/', function(req, res, next) {
+  res.json(blogsController.post(req.body));
+});
+
+router.put('/:id', function(req, res, next) {
+  const id = req.params.id;
+  res.json(blogsController.put(id, req.body));
+});
+
+router.delete('/:id', function(req, res, next) {
+  const id = req.params.id;
+  res.json(blogsController.remove(id));
 });
 
 module.exports = router;

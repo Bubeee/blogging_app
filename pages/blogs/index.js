@@ -6,5 +6,5 @@ module.exports = {
   getById: blogsController.getById,
   post: blogsController.post,
   put: blogsController.put,
-  delete: blogsController.delete
+  remove: blogsController.remove
 };
