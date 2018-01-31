@@ -1,8 +1,8 @@
 class Blog {
-  constructor(id, title, content, authorId) {
+  constructor(id, title, description, authorId) {
     this.id = id;
     this.title = title;
-    this.content = content;
+    this.description = description;
     this.authorId = authorId;
   }
 }
