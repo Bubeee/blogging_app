@@ -48,14 +48,15 @@ app.use(
 );
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/blogs', blogs);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  // var err = new Error('Not Found');
+  // err.status = 404;
+  // next(err);
+
+  res.redirect('/');  
 });
 
 // error handler
@@ -67,6 +68,10 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.get('*', function (req, res) {
+  res.redirect('/');
 });
 
 module.exports = app;
