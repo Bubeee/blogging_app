@@ -18,8 +18,14 @@ function get() {
 }
 
 function getById(id) {
-  index = blogs.findIndex(obj => obj.id == id);
-  return blogs[index];
+  return Blog.findOne({ _id: id })
+    .then(function(blog) {
+      if (!blog) {
+        return null;
+      }
+
+      return { blog: blog.toJSON() };
+    });
 }
 
 function post(blog) {
@@ -32,17 +38,36 @@ function post(blog) {
   });
 }
 
-function put(id, blog) {
-  Blog.findById(id).then(blog => {
-    blog.save().then(function(blog) {
-      return { article: article.toJSON() };
+function put(id, updatedBlog) {
+  return Blog.findById(id).then(blog => {
+    if (!blog) {
+      return null;
+    }
+
+    if (updatedBlog.title) {
+      blog.title = updatedBlog.title;
+    }
+
+    if (updatedBlog.content) {
+      blog.content = updatedBlog.content;
+    }
+
+    return blog.save().then(function(saved) {
+      return { blog: saved.toJSON() };
     });
   });
 }
 
 function remove(id) {
-  index = blogs.findIndex(obj => obj.id == id);
-  blogs.splice(index, 1);
+  return Blog.findById(id).then(blog => {
+    if (!blog) {
+      return null;
+    }
+
+    return blog.remove().then(function(saved) {
+      return { blog: saved.toJSON() };
+    });
+  });
 }
 
 module.exports = {

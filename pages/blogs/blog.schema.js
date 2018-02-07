@@ -4,7 +4,7 @@ let autoIncrement = require('mongoose-auto-increment');
 let BlogSchema = mongoose.Schema({
   _id: { type: Number },
   title: { type: String },
-  description: { type: String },
+  content: { type: String },
   // author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
@@ -12,7 +12,7 @@ BlogSchema.methods.toJSON = function(){
   return {
     _id: this.id,
     title: this.title,
-    description: this.description,
+    content: this.content,
     // author: this.author.toProfileJSONFor(user)
   };
 };
