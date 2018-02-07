@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var stylus = require('stylus');
 var mongoose = require('mongoose');
+var autoIncrement = require('mongoose-auto-increment');
 
 var config = require('./app.config')
 
@@ -50,6 +51,7 @@ app.use(
 
 mongoose.connect(config.connectionString);
 mongoose.set('debug', true);
+autoIncrement.initialize(mongoose.connection);
 
 require('./pages/blogs/blog.schema');
 

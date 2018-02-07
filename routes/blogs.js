@@ -16,17 +16,26 @@ router.get('/:id', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  res.json(blogsController.post(req.body).catch(next));
+  blogsController
+    .post(req.body)
+    .then(result => res.json(result))
+    .catch(next);
 });
 
 router.put('/:id', function(req, res, next) {
   const id = req.params.id;
-  res.json(blogsController.put(id, req.body));
+  blogsController
+    .put(id, req.body)
+    .then(result => res.json(result))
+    .catch(next);
 });
 
 router.delete('/:id', function(req, res, next) {
   const id = req.params.id;
-  res.json(blogsController.remove(id));
+  blogsController
+    .remove(id)
+    .then(result => res.json(result))
+    .catch(next);
 });
 
 module.exports = router;

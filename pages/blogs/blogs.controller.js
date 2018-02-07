@@ -2,18 +2,19 @@ var mongoose = require('mongoose');
 var Blog = mongoose.model('Blog');
 
 function get() {
-  return Promise.all([Blog.find().exec(), Blog.count().exec()])
-    .then(function(results) {
-      var blogs = results[0];
-      var blogsCount = results[1];
+  return Promise.all([Blog.find().exec(), Blog.count().exec()]).then(function(
+    results
+  ) {
+    var blogs = results[0];
+    var blogsCount = results[1];
 
-      return {
-        blogs: blogs.map(function(blog) {
-          return blog.toJSON();
-        }),
-        blogsCount: blogsCount
-      };
-    });
+    return {
+      blogs: blogs.map(function(blog) {
+        return blog.toJSON();
+      }),
+      blogsCount: blogsCount
+    };
+  });
 }
 
 function getById(id) {
@@ -27,13 +28,16 @@ function post(blog) {
   // blog.author = user;
 
   return blog.save().then(function() {
-    return { blog: blog.toJSONFor() };
+    return { blog: blog.toJSON() };
   });
 }
 
 function put(id, blog) {
-  index = blogs.findIndex(obj => obj.id == id);
-  blogs[index] = blog;
+  Blog.findById(id).then(blog => {
+    blog.save().then(function(blog) {
+      return { article: article.toJSON() };
+    });
+  });
 }
 
 function remove(id) {
