@@ -5,10 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var stylus = require('stylus');
+var mongoose = require('mongoose');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-var blogs = require('./routes/blogs');
+var config = require('./app.config')
 
 var winston = require('winston'),
     expressWinston = require('express-winston');
@@ -47,8 +46,15 @@ app.use(
   })
 );
 
-app.use('/', index);
-app.use('/blogs', blogs);
+// mongoose 
+
+mongoose.connect(config.connectionString);
+mongoose.set('debug', true);
+
+require('./pages/blogs/blog.schema');
+
+
+app.use(require('./routes'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
