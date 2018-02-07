@@ -4,14 +4,17 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 var stylus = require('stylus');
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
 
-var config = require('./app.config')
+var config = require('./app.config');
 
 var winston = require('winston'),
-    expressWinston = require('express-winston');
+  expressWinston = require('express-winston');
+
+var isProduction = process.env.NODE_ENV === 'production';
 
 var app = express();
 
@@ -29,6 +32,8 @@ app.use(cookieParser());
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({ secret: 'frontcamp', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
+
 app.use(
   expressWinston.logger({
     transports: [
@@ -43,20 +48,22 @@ app.use(
     meta: true,
     msg: 'HTTP {{req.method}} {{req.url}}', // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
     expressFormat: true,
-    colorStatus: true,
+    colorStatus: true
   })
 );
 
-// mongoose 
+// mongoose
 
 mongoose.connect(config.connectionString);
 mongoose.set('debug', true);
 autoIncrement.initialize(mongoose.connection);
 
 require('./pages/blogs/blog.schema');
-
+require('./pages/users/user.schema');
+require('./core/passport');
 
 app.use(require('./routes'));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -64,21 +71,32 @@ app.use(function(req, res, next) {
   // err.status = 404;
   // next(err);
 
-  res.redirect('/');  
+  res.redirect('/');
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+if (!isProduction) {
+  app.use(function(err, req, res, next) {
+    console.log(err.stack);
 
-  // render the error page
+    res.status(err.status || 500);
+
+    res.json({'errors': {
+      message: err.message,
+      error: err
+    }});
+  });
+}
+
+app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error');
+  res.json({'errors': {
+    message: err.message,
+    error: {}
+  }});
 });
 
-app.get('*', function (req, res) {
+app.get('*', function(req, res) {
   res.redirect('/');
 });
 
