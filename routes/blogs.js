@@ -19,7 +19,7 @@ router.get('/:id', auth.required, function(req, res, next) {
       if (!result) {
         res.sendStatus(404);
       } else {
-        
+        res.json(result);
       }
     })
     .catch(next);

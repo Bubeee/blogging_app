@@ -2,40 +2,26 @@ var mongoose = require('mongoose');
 var Blog = mongoose.model('Blog');
 
 function get() {
-  return Promise.all([Blog.find().exec(), Blog.count().exec()]).then(function(
-    results
+  return Blog.find().exec().then(function(
+    result
   ) {
-    var blogs = results[0];
-    var blogsCount = results[1];
+    var blogs = result;
 
     return {
-      blogs: blogs.map(function(blog) {
-        return blog.toJSON();
-      }),
-      blogsCount: blogsCount
+      blogs,
+      blogsCount: blogs.length
     };
   });
 }
 
 function getById(id) {
-  return Blog.findOne({ _id: id })
-    .then(function(blog) {
-      if (!blog) {
-        return null;
-      }
-
-      return { blog: blog.toJSON() };
-    });
+  return Blog.findOne({ _id: id });
 }
 
 function post(blog) {
   var blog = new Blog(blog);
 
-  // blog.author = user;
-
-  return blog.save().then(function() {
-    return { blog: blog.toJSON() };
-  });
+  return blog.save();
 }
 
 function put(id, updatedBlog) {
@@ -52,9 +38,7 @@ function put(id, updatedBlog) {
       blog.content = updatedBlog.content;
     }
 
-    return blog.save().then(function(saved) {
-      return { blog: saved.toJSON() };
-    });
+    return blog.save();
   });
 }
 
@@ -64,9 +48,7 @@ function remove(id) {
       return null;
     }
 
-    return blog.remove().then(function(saved) {
-      return { blog: saved.toJSON() };
-    });
+    return blog.remove();
   });
 }
 
