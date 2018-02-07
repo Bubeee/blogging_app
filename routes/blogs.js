@@ -4,7 +4,10 @@ var router = express.Router();
 let blogsController = require('../pages/blogs');
 
 router.get('/', function(req, res, next) {
-  res.json(blogsController.get());
+  blogsController
+    .get()
+    .then(result => res.json(result))
+    .catch(next);
 });
 
 router.get('/:id', function(req, res, next) {
@@ -13,7 +16,7 @@ router.get('/:id', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  res.json(blogsController.post(req.body));
+  res.json(blogsController.post(req.body).catch(next));
 });
 
 router.put('/:id', function(req, res, next) {

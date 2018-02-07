@@ -1,12 +1,19 @@
 let mongoose = require('mongoose');
 
-let blogSchema = mongoose.Schema({
+let BlogSchema = mongoose.Schema({
   id: { type: Number },
   title: { type: String },
   description: { type: String },
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  // author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-mongoose.model('Blog', blogSchema);
+BlogSchema.methods.toJSON = function(){
+  return {
+    id: this.id,
+    title: this.title,
+    description: this.description,
+    // author: this.author.toProfileJSONFor(user)
+  };
+};
 
-module.exports = { blogSchema };
+mongoose.model('Blog', BlogSchema);
